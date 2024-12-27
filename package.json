@@ -1,0 +1,15 @@
+{
+  "name": "react-element-plane",
+  "module": "index.ts",
+  "type": "module",
+  "workspaces": [
+    "example",
+  "react-element-plane"  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
