@@ -1,1 +1,1 @@
-export {ElementPlane} from "./src/ElementPlane";
+export {ElementPlane} from "./src/components/ElementPlane";
