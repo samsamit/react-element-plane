@@ -3,7 +3,7 @@ import { PlanePosition } from "src/types"
 import usePlaneEvents from "../hooks/usePlaneEvents"
 import "../style.css"
 import InternalPlaneItem from "./InternalPlaneItem"
-import { Children, isValidElement, PropsWithChildren, ReactElement, useCallback, useState } from "react"
+import { Children, isValidElement, PropsWithChildren, ReactElement, useCallback, useEffect, useState } from "react"
 
 
 interface ElementPlaneProps {
@@ -13,9 +13,16 @@ interface ElementPlaneProps {
 
 const ElementPlane = ({ children, virtualizationOffset }: ElementPlaneProps) => {
   const { planeRef, planeState } = usePlaneEvents()
+  const [shouldUpdate, setShouldUpdate] = useState(true)
 
-  const isItemOnScreen = useCallback((position: PlanePosition) => {
-    if (!planeRef.current || !virtualizationOffset) return true
+  // set shouldUpdate => true on initial render, triggering re-render
+  useEffect(() => {
+    if (shouldUpdate) setShouldUpdate(false)
+  }, [shouldUpdate])
+
+  const isItemOnScreen = (position: PlanePosition) => {
+    if (!planeRef.current) return false
+    if (!virtualizationOffset) return true
     const plane = planeRef.current
     const { positionOffset, zoomLevel } = planeState
     const { x, y } = position
@@ -25,16 +32,18 @@ const ElementPlane = ({ children, virtualizationOffset }: ElementPlaneProps) => 
     const centerX = width / 2
     const centerY = height / 2
 
-    const topPlanePosition = (top - offsetY - centerY - virtualizationOffset) / zoomLevel
-    const leftPlanePosition = (left - offsetX - centerX - virtualizationOffset) / zoomLevel
-    const rightPlanePosition = (right - offsetX - centerX + virtualizationOffset) / zoomLevel
-    const bottomPlanePosition = (bottom - offsetY - centerY + virtualizationOffset) / zoomLevel
+    const zoomedVirtualizationOffset = virtualizationOffset * zoomLevel
+
+    const topPlanePosition = (top - offsetY - centerY - zoomedVirtualizationOffset) / zoomLevel
+    const leftPlanePosition = (left - offsetX - centerX - zoomedVirtualizationOffset) / zoomLevel
+    const rightPlanePosition = (right - offsetX - centerX + zoomedVirtualizationOffset) / zoomLevel
+    const bottomPlanePosition = (bottom - offsetY - centerY + zoomedVirtualizationOffset) / zoomLevel
 
     if (x < leftPlanePosition || x > rightPlanePosition) return false
     if (y < topPlanePosition || y > bottomPlanePosition) return false
     return true
 
-  }, [planeRef, planeState])
+  }
 
   return (
     <div ref={planeRef} className="h-full w-hull relative overflow-hidden">

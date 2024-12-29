@@ -44,6 +44,8 @@ const usePlaneEvents = () => {
                 setPlaneState((state) => {
                     const { x, y } = state.positionOffset
                     const newPosition = { x: x + movementX, y: y + movementY }
+                    plane.style.backgroundPositionX = `calc(50% + ${newPosition.x}px)`
+                    plane.style.backgroundPositionY = `calc(50% + ${newPosition.y}px)`
                     return {...state, positionOffset: newPosition}
                 })
             }
@@ -69,6 +71,10 @@ const usePlaneEvents = () => {
                     y: offsetY - (offsetY - y) * zoomFactor 
                 }
 
+                plane.style.backgroundPositionX = `calc(50% + ${newPosition.x}px)`
+                plane.style.backgroundPositionY = `calc(50% + ${newPosition.y}px)`
+                plane.style.backgroundSize = `${DOT_SPACING * newZoom}px ${DOT_SPACING * newZoom}px`
+
                 return {
                     positionOffset: newPosition, 
                     zoomLevel: newZoom, 
@@ -93,14 +99,6 @@ const usePlaneEvents = () => {
             plane.removeEventListener("mouseleave", mouseUp)
         }
     }, [])
-
-    useEffect(() => {
-        const plane = planeRef.current
-        if (!plane) return
-        plane.style.backgroundPositionX = `calc(50% + ${planeState.positionOffset.x}px)`
-        plane.style.backgroundPositionY = `calc(50% + ${planeState.positionOffset.y}px)`
-        plane.style.backgroundSize = `${DOT_SPACING * planeState.zoomLevel}px ${DOT_SPACING * planeState.zoomLevel}px`
-    }, [planeState])
     
     return { planeRef, planeState }
 }

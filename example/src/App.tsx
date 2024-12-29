@@ -2,14 +2,27 @@ import { ElementPlane } from 'react-element-plane'
 import './App.css'
 import { useState } from 'react'
 
+
+const generateTestElements = (count: number) => {
+  const elements = []
+  const sideLength = Math.ceil(Math.sqrt(count))
+  const startOffset = Math.floor(sideLength / 2) * 200
+
+  for (let i = 0; i < count; i++) {
+    const row = Math.floor(i / sideLength)
+    const col = i % sideLength
+    const x = (col * 200) - startOffset
+    const y = (row * 200) - startOffset
+    elements.push({ id: i.toString(), position: { x, y } })
+  }
+
+  return elements
+}
+
+
 function App() {
 
-  const [elements, setElements] = useState([
-    { id: '1', position: { x: -100, y: -100 } },
-    { id: '2', position: { x: 100, y: -100 } },
-    { id: '3', position: { x: -100, y: 100 } },
-    { id: '4', position: { x: 100, y: 100 } },
-  ])
+  const [elements, setElements] = useState(generateTestElements(10000))
 
   const onElementPositionChange = (id: string, newPosition: { x: number, y: number }) => {
     setElements((elements) => {

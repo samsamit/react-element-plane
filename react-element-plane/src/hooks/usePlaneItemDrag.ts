@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { PlanePosition } from "src/types"
+import { PlanePosition, Z_LEVELS } from "../types"
 
 interface UsePlaneItemDragProps {
     onPositionChange: (dragOffset: PlanePosition) => void
@@ -22,10 +22,12 @@ const usePlaneItemDrag = ({onPositionChange, currentPosition, zoomLevel}: UsePla
             if (e.target === planeItem) {
                 isDragging = true
                 initialCursorPosition = { x: e.clientX, y: e.clientY }
+                planeItem.style.zIndex = Z_LEVELS.dragging.toString()
             }
         }
 
         const handleMouseUp = (e: MouseEvent) => {
+            planeItem.style.zIndex = Z_LEVELS.default.toString()
             if (!initialCursorPosition) return
             const offsetX = (e.clientX - initialCursorPosition.x) / zoomLevel
             const offsetY = (e.clientY - initialCursorPosition.y) / zoomLevel
