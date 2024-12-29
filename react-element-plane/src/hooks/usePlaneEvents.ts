@@ -83,12 +83,14 @@ const usePlaneEvents = () => {
         plane.addEventListener("mousedown", mouseDown)
         plane.addEventListener("mouseup", mouseUp)
         plane.addEventListener("mousemove", handleDrag)
+        plane.addEventListener("mouseleave", mouseUp)
     
         return () => {
             plane.removeEventListener("wheel", handleWheel)
             plane.removeEventListener("mousedown", mouseDown)
             plane.removeEventListener("mouseup", mouseUp)
             plane.removeEventListener("mousemove", handleDrag)
+            plane.removeEventListener("mouseleave", mouseUp)
         }
     }, [])
 

@@ -5,10 +5,10 @@ import { useState } from 'react'
 function App() {
 
   const [elements, setElements] = useState([
-    { id: '1', position: { x: 0, y: 0 } },
-    { id: '2', position: { x: 50, y: 0 } },
-    { id: '3', position: { x: 100, y: 0 } },
-    { id: '4', position: { x: 150, y: 0 } },
+    { id: '1', position: { x: -100, y: -100 } },
+    { id: '2', position: { x: 100, y: -100 } },
+    { id: '3', position: { x: -100, y: 100 } },
+    { id: '4', position: { x: 100, y: 100 } },
   ])
 
   const onElementPositionChange = (id: string, newPosition: { x: number, y: number }) => {
@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div className='testContainer'>
-      <ElementPlane>
+      <ElementPlane virtualizationOffset={100}>
         {elements.map((element) => (
           <ElementPlane.Item
             key={element.id}
