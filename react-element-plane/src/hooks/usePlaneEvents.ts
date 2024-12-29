@@ -22,7 +22,6 @@ const usePlaneEvents = () => {
         let isDragging = false
 
         const addStyles = () => {
-            plane.style.backgroundImage = "radial-gradient(rgba(255, 255, 255, 0.171) 2px, transparent 0)"
             plane.style.backgroundSize = `${DOT_SPACING}px ${DOT_SPACING}px`
             plane.style.backgroundPosition = "center"
             plane.style.backgroundRepeat = "repeat"

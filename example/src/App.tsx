@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className='testContainer'>
-      <ElementPlane virtualizationOffset={100}>
+      <ElementPlane virtualizationOffset={100} gridStyle={{ dotColor: 'blue', dotSize: 1, backgroundColor: 'transparent' }}>
         {elements.map((element) => (
           <ElementPlane.Item
             key={element.id}

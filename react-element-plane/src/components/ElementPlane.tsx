@@ -8,10 +8,26 @@ import { Children, isValidElement, PropsWithChildren, ReactElement, useCallback,
 
 interface ElementPlaneProps {
   children: ReactElement<ElementPlaneItemProps>[] | ReactElement<ElementPlaneItemProps>
+  disableGrid?: boolean
+  gridStyle?: {
+    backgroundColor: string
+    dotColor: string
+    dotSize: number
+    bgImageOverride?: string
+  }
   virtualizationOffset?: number
 }
 
-const ElementPlane = ({ children, virtualizationOffset }: ElementPlaneProps) => {
+const ElementPlane = ({
+  children,
+  virtualizationOffset,
+  disableGrid = false,
+  gridStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.171)",
+    dotColor: "transparent",
+    dotSize: 2,
+  }
+}: ElementPlaneProps) => {
   const { planeRef, planeState } = usePlaneEvents()
   const [shouldUpdate, setShouldUpdate] = useState(true)
 
@@ -45,8 +61,11 @@ const ElementPlane = ({ children, virtualizationOffset }: ElementPlaneProps) => 
 
   }
 
+  const bgImage = gridStyle.bgImageOverride || `radial-gradient(${gridStyle.dotColor} ${gridStyle.dotSize}px, ${gridStyle.backgroundColor} 0)`
   return (
-    <div ref={planeRef} className="h-full w-hull relative overflow-hidden">
+    <div ref={planeRef} style={{
+      backgroundImage: disableGrid ? "none" : bgImage,
+    }} className="h-full w-hull relative overflow-hidden">
       {Children.map(children, (child) => {
         if (isElementPlaneItem(child)) {
           const { position, onPositionChange } = child.props
@@ -61,6 +80,7 @@ const ElementPlane = ({ children, virtualizationOffset }: ElementPlaneProps) => 
             </InternalPlaneItem>
           )
         }
+        throw new Error("ElementPlane children must be of type ElementPlane.Item")
       })}
     </div>
   )
