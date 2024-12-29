@@ -1,9 +1,10 @@
 
 export interface PlaneState {
-    positionOffset: PlaneItemPosition
+    positionOffset: PlanePosition
     zoomLevel: number
 }
-export interface PlaneItemPosition {
+
+export interface PlanePosition {
     x: number
     y: number
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { PlaneItemPosition, PlaneState } from "src/types"
+import { PlanePosition, PlaneState } from "src/types"
 
 const DOT_SPACING = 50
 const ZOOM_SPEED = 0.02
@@ -8,10 +8,14 @@ const MIN_ZOOM = 0.5
 
 const usePlaneEvents = () => {
     const planeRef = useRef<HTMLDivElement>(null)
-    const [planeState, setPlaneState] = useState<PlaneState>({positionOffset: { x: 0, y: 0 }, zoomLevel: 1})
-    
+    const [planeState, setPlaneState] = useState<PlaneState>(
+        {
+            positionOffset: { x: 0, y: 0 }, 
+            zoomLevel: 1, 
+        })
+
     useEffect(() => {
-        const plane = planeRef.current
+        const plane = planeRef.current 
     
         if (!plane) return
     
@@ -60,13 +64,15 @@ const usePlaneEvents = () => {
                 const newZoom = deltaY > 0 ? Math.max(MIN_ZOOM, zoomLevel - ZOOM_SPEED) : Math.min(MAX_ZOOM, zoomLevel + ZOOM_SPEED)
         
                 const zoomFactor = newZoom / zoomLevel
-                const newPosition: PlaneItemPosition = { 
+                const newPosition: PlanePosition = { 
                     x: offsetX - (offsetX - x) * zoomFactor, 
                     y: offsetY - (offsetY - y) * zoomFactor 
                 }
 
-                console.log(newZoom, zoomFactor)
-                return {positionOffset: newPosition, zoomLevel: newZoom}
+                return {
+                    positionOffset: newPosition, 
+                    zoomLevel: newZoom, 
+                }
             })
         }
 

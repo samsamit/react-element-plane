@@ -1,26 +1,50 @@
 
-import { PlaneItemPosition } from "src/types"
+import { PlanePosition } from "src/types"
 import usePlaneEvents from "../hooks/usePlaneEvents"
 import "../style.css"
-import PlaneItem from "./PlaneItem"
-import { PropsWithChildren, useState } from "react"
+import InternalPlaneItem from "./InternalPlaneItem"
+import { Children, isValidElement, PropsWithChildren, ReactElement, useState } from "react"
 
 
-export const ElementPlane = ({children}: PropsWithChildren) => {
-  const [testElementPosition, setTestElementPosition] = useState<PlaneItemPosition>({ x: 0, y: 0 })
+interface ElementPlaneProps {
+  children: ReactElement<ElementPlaneItemProps>[] | ReactElement<ElementPlaneItemProps>
+}
+
+const ElementPlane = ({ children }: ElementPlaneProps) => {
   const { planeRef, planeState } = usePlaneEvents()
 
-  const handleDragEnd = (id: string, dragOffset: PlaneItemPosition) => {
-    if (id === "1") {
-      setTestElementPosition((position) => {
-        return { x: position.x + dragOffset.x, y: position.y + dragOffset.y }
-      })
-    }
-  }
   return (
     <div ref={planeRef} className="h-full w-hull relative">
-      <PlaneItem id="1" position={testElementPosition} planeState={planeState} planeRef={planeRef} onDragEnd={handleDragEnd} />
+      {Children.map(children, (child) => {
+        if (isElementPlaneItem(child)) {
+          const { position, onPositionChange } = child.props
+          return (
+            <InternalPlaneItem
+              position={position}
+              planeState={planeState}
+              onPositionChange={onPositionChange}
+            >
+              {child}
+            </InternalPlaneItem>
+          )
+        }
+      })}
     </div>
   )
 }
 
+interface ElementPlaneItemProps {
+  id: string
+  position: PlanePosition
+  onPositionChange: (newPosition: PlanePosition) => void
+}
+
+const isElementPlaneItem = (child: ReactElement): child is ReactElement<ElementPlaneItemProps> => {
+  return isValidElement(child) && (child as ReactElement<ElementPlaneItemProps>).props.id !== undefined && (child as ReactElement<ElementPlaneItemProps>).props.position !== undefined && (child as ReactElement<ElementPlaneItemProps>).props.onPositionChange !== undefined;
+}
+
+const ElementPlaneItem = (props: PropsWithChildren<ElementPlaneItemProps>) => <>{props.children}</>
+
+ElementPlane.Item = ElementPlaneItem
+
+export { ElementPlane }
